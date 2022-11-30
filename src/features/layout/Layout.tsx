@@ -1,9 +1,27 @@
 import React, { useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLinkClickHandler, useLocation } from 'react-router-dom';
 import { Navbar } from 'flowbite-react';
 import { Sun, Moon } from 'react-feather';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectColorTheme, toggleColorTheme } from './layoutSlice';
+
+export interface AppNavLinkProps {
+  to: string;
+  text: string;
+}
+
+export function AppNavLink({ to, text }: AppNavLinkProps) {
+  const location = useLocation();
+  const clickHandler = useLinkClickHandler(to);
+
+  return (
+    <span onClick={clickHandler} aria-hidden="true">
+      <Navbar.Link href={to} active={location.pathname === to}>
+        {text}
+      </Navbar.Link>
+    </span>
+  );
+}
 
 function Layout() {
   // dispatch
@@ -37,12 +55,10 @@ function Layout() {
           </button>
         </div>
         <Navbar.Collapse>
-          <Navbar.Link href="/" active>
-            Intorduction
-          </Navbar.Link>
-          <Navbar.Link href="/skills">Skills</Navbar.Link>
-          <Navbar.Link href="/work-experience">Work Experience</Navbar.Link>
-          <Navbar.Link href="/portfolio">Portfolio</Navbar.Link>
+          <AppNavLink to="/" text="Intorduction" />
+          <AppNavLink to="/skills" text="Skills" />
+          <AppNavLink to="/work-experience" text="Work Experience" />
+          <AppNavLink to="/portfolio" text="Portfolio" />
         </Navbar.Collapse>
       </Navbar>
       <div className="mx-auto container">
